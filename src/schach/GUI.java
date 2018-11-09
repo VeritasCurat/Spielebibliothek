@@ -13,29 +13,6 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-
-
-class MyCanvas extends JComponent {
-	
-	
-	
-  /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-public static int xSize=100;	
-  public static String[][] figuren = new String[8][8];
-
-  public void paint(Graphics g) {
-	  for(int x=0; x<8;x++) {
-		  for(int y=0; y<8;y++) {
-			    if(x%2 != y%2) g.fillRect(x*100, y*100, 100, 100);
-			    else g.drawRect(x*100, y*100, 100, 100);
-		  }
-	  }
-  }
-}
-
 public class GUI extends JFrame{
     /**
 	 * 
@@ -61,12 +38,7 @@ public class GUI extends JFrame{
 		    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    window.setBounds(0, 0, 800, 827);
 		    window.setTitle("Schachapp");
-		    MyCanvas.xSize = 110;
-		    window.getContentPane().add(new MyCanvas());
 		    window.setVisible(true);
-		    
-		    
-		  
   }
   
   public static void darst_wK(int x, int y) throws IOException {
