@@ -3,17 +3,17 @@ package mühle;
 import java.io.IOException;
 import javax.swing.JPanel;
 
-public class Controller extends JPanel{
-	static GUI G;
+public class MühleController extends JPanel{
+	static MühleGUI G;
 	
 	//Variablen für KI
 		static boolean spiel_modus_KI= false;
 		static boolean farbe_KI_schwarz = true;
 		
 	private static final long serialVersionUID = 1L;
-	static Spielfeld S = new Spielfeld();
+	static MühleSpielfeld S = new MühleSpielfeld();
 	static String farbe="weiß";
-	int mouseX =0; int mouseY=0; static String auswahl=""; static int auswahlX = -1; static int auswahlY=-1; static int auswahlRing = -1;
+	static String auswahl=""; static int auswahlX = -1; static int auswahlY=-1; static int auswahlRing = -1;
 	static boolean markiert = false;
 	
 	static int phaseWeiß=0; static int phaseSchwarz=0;//0: setzen, 1: 4-9 Figuren, 2: 1-3 Figuren
@@ -26,13 +26,14 @@ public class Controller extends JPanel{
 	
 	private static int koordinateInRing(int x, int y) {
 		if(x*y == 9)return -1;
-		else if(Math.abs(3-x)==Math.abs(3-y)) return Math.abs(3-y);
+		else if(Math.abs(3-x)==Math.abs(3-y)) return Math.abs(y%3);
 		else if(x+y == 6)return Math.abs(x-y)/2;
-		else if(x==3 || y==3) return 3-Math.abs(3-x) + 3-Math.abs(3-y);
+		else if(x==3 || y==3) return 3-Math.abs(3-x) + 3-Math.abs(y);
 		else return -1;
 	}
 	
 	private static int[] koordinateInRingKoordinate(int x, int y) {
+		System.out.println(x+" "+y);
 		int[] k = new int[3];
 		k[2] = koordinateInRing(x, y);
 		if(k[2] == 0) {
@@ -49,10 +50,11 @@ public class Controller extends JPanel{
 	}
 	
 	public static String markFigure(int x, int y) {
+		
 		int[] k = koordinateInRingKoordinate(x, y);
 		
-		String f = Spielfeld.figuren[k[0]][k[1]][k[2]].farbe.substring(0,1);
-		String t = Spielfeld.figuren[k[0]][k[1]][k[2]].typ.substring(0,1);
+		String f = MühleSpielfeld.figuren[k[0]][k[1]][k[2]].farbe.substring(0,1);
+		String t = MühleSpielfeld.figuren[k[0]][k[1]][k[2]].typ.substring(0,1);
 		System.out.println(x+" "+y+" "+k[2]+": "+f+t);
 		if(!f.equals(farbe.substring(0,1))) {
 			System.out.println("falsche Farbe: "+f+"!="+farbe.substring(0,1));
@@ -62,13 +64,15 @@ public class Controller extends JPanel{
 		return f+t;
 	}
 	
-	public static Figur getFigur(int x, int y, int ring) {
-		return Spielfeld.figuren[x][y][ring];
+	public static MühleFigur getFigur(int x, int y, int ring) {
+		return MühleSpielfeld.figuren[x][y][ring];
 	}
+	
+	
 
 	public static void setFigure(int x, int y, int ring, String farbe) {
 		System.out.println("GUI bewegung: "+auswahl+": "+auswahlX+" "+auswahlY+" => "+x+" "+y);
-		if(!Spielfeld.bewegungAusführen(auswahlX, auswahlY, auswahlRing, x, y, ring, farbe))return;	
+		if(!MühleSpielfeld.bewegungAusführen(auswahlX, auswahlY, auswahlRing, x, y, ring, farbe))return;	
 		
 		//wenn KI eingeschaltet reagiert jetzt die KI
 //				if(spiel_modus_KI) {
@@ -94,33 +98,35 @@ public class Controller extends JPanel{
 		int[] k = koordinateInRingKoordinate(ShowCanvas.x, ShowCanvas.y);
 		auswahlX = k[0]; auswahlY = k[1]; auswahlRing = k[2];
 		System.out.println(auswahlX+" "+auswahlY+" "+auswahlRing);
-		if(!Spielfeld.spiel_aktiv) {
+		if(!MühleSpielfeld.spiel_aktiv) {
 			System.exit(0);
 		}
 		if(farbe.equals("weiß") && phaseWeiß==0) {
-			Spielfeld.setFigure(auswahlX, auswahlY, auswahlRing, farbe);
+			System.out.println("setze Stein auf:"+k[0]+" "+k[1]+" "+k[2]);
+			MühleSpielfeld.setFigure(auswahlX, auswahlY, auswahlRing, farbe);
+			System.out.println("Farbe:" +MühleSpielfeld.figuren[k[0]][k[1]][k[2]].farbe);
 			auswahlRing = auswahlX = auswahlY = -1;
 			G.repaint();
 			return;
 		}
 		if(farbe.equals("schwarz") && phaseSchwarz==0) {
-			Spielfeld.setFigure(auswahlX, auswahlY, auswahlRing, farbe);
+			MühleSpielfeld.setFigure(auswahlX, auswahlY, auswahlRing, farbe);
 			auswahlRing = auswahlX = auswahlY = -1;
 			G.repaint();
 			return;
 		}
-		if(!Controller.markiert) {
-			Controller.auswahl = Controller.markFigure((int) ShowCanvas.x, (int) (ShowCanvas.y));
-			if(Controller.auswahl.equals(""))return;
-			Controller.markiert = true;
-			System.out.println(Controller.auswahl);
+		if(!MühleController.markiert) {
+			MühleController.auswahl = MühleController.markFigure((int) ShowCanvas.x, (int) (ShowCanvas.y));
+			if(MühleController.auswahl.equals(""))return;
+			MühleController.markiert = true;
+			System.out.println(MühleController.auswahl);
 			G.repaint();
 		}
-		else if(Controller.markiert) {
-			Controller.markiert =false;
-			Controller.setFigure(auswahlX,auswahlY,auswahlRing,farbe);
-			Controller.auswahlX = Controller.auswahlY = Controller.auswahlRing=-1; Controller.auswahl = "";
-			System.out.println(Controller.auswahl);
+		else if(MühleController.markiert) {
+			MühleController.markiert =false;
+			MühleController.setFigure(auswahlX,auswahlY,auswahlRing,farbe);
+			MühleController.auswahlX = MühleController.auswahlY = MühleController.auswahlRing=-1; MühleController.auswahl = "";
+			System.out.println(MühleController.auswahl);
 			G.repaint();
 		}	
 		
@@ -129,15 +135,15 @@ public class Controller extends JPanel{
 	
 	
 	public static void spiel_gegen_menschen() {
-		Spielfeld.init();
+		MühleSpielfeld.init();
 		
-		G = new GUI();
+		G = new mühle.MühleGUI();
 		G.repaint();
 	}
 	
 	public static void spiel_gegen_KI() {
 	
-		G = new GUI();
+		G = new mühle.MühleGUI();
 		G.repaint();
 		
 	}

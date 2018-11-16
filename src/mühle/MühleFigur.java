@@ -1,7 +1,7 @@
  
 package mühle;
 
-public class Figur {
+public class MühleFigur {
 	boolean automatic = true;
 	
 	String typ="NULL";
@@ -10,7 +10,7 @@ public class Figur {
 	int X=-1;
 	int Y=-1;
 	
-	public Figur(int x, int y, int Ring, String farbe) {
+	public MühleFigur(int x, int y, int Ring, String farbe) {
 		this.X = x;
 		this.Y = y;
 		this.Ring = Ring;
@@ -24,7 +24,7 @@ public class Figur {
 }
 
 
-class Läufer extends  Figur{
+class Läufer extends  MühleFigur{
 
 	public Läufer(int x, int y, int Ring, String farbe) {
 		super(x, y,Ring, farbe);
@@ -76,7 +76,7 @@ class Läufer extends  Figur{
 }
 
 //jetzt können die Steine Springen
-class Springer extends  Figur{
+class Springer extends  MühleFigur{
 
 	public Springer(int x, int y, int Ring, String farbe) {
 		super(x, y, Ring, farbe);

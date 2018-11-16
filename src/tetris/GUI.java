@@ -13,7 +13,7 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import mühle.Controller;
+import mühle.MühleController;
 import sun.security.provider.ConfigFile.Spi;
 
 
