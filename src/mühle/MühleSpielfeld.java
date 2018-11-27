@@ -1,9 +1,9 @@
 package mühle;
-public class Spielfeld {
+public class MühleSpielfeld {
 		
 	static boolean automatic = true;
 	static boolean spiel_aktiv=true;
-	static Figur[][][] figuren = new Figur[3][3][3];
+	static MühleFigur[][][] figuren = new MühleFigur[3][3][3];
 	
 	static int anz_weiß=9;
 	static int anz_schwarz=9;
@@ -22,7 +22,7 @@ public class Spielfeld {
 		for(int x=0; x<3; x++) {
 			for(int y=0; y<3; y++) {
 				for(int z=0; z<3; z++) {
-					figuren[x][y][z] = new Figur(x, y, z, "NULL");			
+					figuren[x][y][z] = new MühleFigur(x, y, z, "NULL");			
 				}
 			}
 		}
@@ -30,16 +30,18 @@ public class Spielfeld {
 	
 	public static boolean setFigure(int x1, int y1, int ring, String farbe) {
 		//Das ist garkein Feld
-		if(x1 < 0 || y1 < 0 || x1 > 7 || y1 > 7) {
-			if(!automatic)System.out.println("Das ist garkein Feld");
+		if(x1 < 0 || y1 < 0 || x1 > 2 || y1 > 2) {
+			System.out.println("Das ist garkein Feld");
 			return false;
 		}	
 		//das ist nicht ihre Figur
 		if(!figuren[x1][y1][ring].farbe.equals("NULL")) {
-			if(!automatic)System.out.println("Hier steht schon eine Figur!");
+			System.out.println("Hier steht schon eine Figur von: "+figuren[x1][y1][ring].farbe);
 			return false;
 		}
+		System.out.println("TEST");
 		figuren[x1][y1][ring].typ="Läufer"; figuren[x1][y1][ring].farbe=farbe;
+		System.out.println(figuren[x1][y1][ring].farbe);
 		return true;
 	}
 	
@@ -91,7 +93,7 @@ public class Spielfeld {
 				case "Springer": {figuren[x2][y2][z2] = new Springer(x2, y2, z2, farbe); break;}
 			}
 			
-			figuren[x1][y1][z1] = new Figur(x1, y1, z1, "NULL");
+			figuren[x1][y1][z1] = new MühleFigur(x1, y1, z1, "NULL");
 			return true;
 		}
 		return false;

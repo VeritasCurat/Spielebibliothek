@@ -1,8 +1,9 @@
  
 package schach;
 
-public class Figur {
+public class SchachFigur {
 	boolean automatic = true;
+	boolean bewegt = false;
 	
 	String typ="";
 	String farbe="";
@@ -10,7 +11,8 @@ public class Figur {
 	int X=-1;
 	int Y=-1;
 	
-	public Figur(int x, int y, String farbe) {
+	public SchachFigur(int x, int y, String farbe, boolean Bewegt) {
+		bewegt = Bewegt;
 		this.X = x;
 		this.Y = y;
 		this.darstellung = " ";
@@ -31,10 +33,10 @@ public class Figur {
 }
 
 
-class Bauer extends  Figur{
+class Bauer extends  SchachFigur{
 
-	public Bauer(int x, int y,String farbe) {
-		super(x, y,farbe);
+	public Bauer(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "Bauer";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "B";
@@ -59,10 +61,11 @@ class Bauer extends  Figur{
 	
 }
 
-class Turm extends  Figur{
+class Turm extends  SchachFigur{
 
-	public Turm(int x, int y,String farbe) {
-		super(x, y,farbe);
+
+	public Turm(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "Turm";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "T";
@@ -79,10 +82,10 @@ class Turm extends  Figur{
 	
 }
 
-class Pferd extends  Figur{
+class Pferd extends  SchachFigur{
 
-	public Pferd(int x, int y,String farbe) {
-		super(x, y,farbe);
+	public Pferd(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "Pferd";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "P";
@@ -99,10 +102,10 @@ class Pferd extends  Figur{
 	
 }
 
-class Läufer extends  Figur{
+class Läufer extends  SchachFigur{
 
-	public Läufer(int x, int y,String farbe) {
-		super(x, y,farbe);
+	public Läufer(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "Läufer";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "L";
@@ -118,10 +121,10 @@ class Läufer extends  Figur{
 	}
 }
 
-class Dame extends  Figur{
+class Dame extends  SchachFigur{
 
-	public Dame(int x, int y,String farbe) {
-		super(x, y,farbe);
+	public Dame(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "Dame";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "D";
@@ -140,10 +143,10 @@ class Dame extends  Figur{
 	}
 }
 
-class König extends Figur{
-
-	public König(int x, int y,String farbe) {
-		super(x, y,farbe);
+class König extends SchachFigur{
+		
+	public König(int x, int y,String farbe, Boolean bewegt) {
+		super(x, y,farbe,bewegt);
 		typ = "König";
 		this.farbe= farbe; 
 		if(farbe.equals("weiß"))darstellung = "K";
@@ -151,7 +154,7 @@ class König extends Figur{
 	}
 	
 	boolean move(int x, int y) {
-		if(Math.abs(x)+Math.abs(y) == 1) {
+		if(Math.abs(x) <= 1 && Math.abs(y) <= 1) {
 			return true;
 		}
 		if(!automatic)System.out.println("Du kannst den König nicht so bewegen!");

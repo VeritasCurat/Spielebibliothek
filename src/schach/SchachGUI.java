@@ -6,37 +6,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-
-
-class MyCanvas extends JComponent {
-	
-	
-	
-  /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-public static int xSize=100;	
-  public static String[][] figuren = new String[8][8];
-
-  public void paint(Graphics g) {
-	  for(int x=0; x<8;x++) {
-		  for(int y=0; y<8;y++) {
-			    if(x%2 != y%2) g.fillRect(x*100, y*100, 100, 100);
-			    else g.drawRect(x*100, y*100, 100, 100);
-		  }
-	  }
-  }
-}
-
-public class GUI extends JFrame{
+public class SchachGUI extends JFrame{
     /**
 	 * 
 	 */
@@ -44,9 +20,10 @@ public class GUI extends JFrame{
 
 	static JFrame window = new JFrame();
     
-    ShowCanvas canvas;
+    static ShowCanvas canvas;
+    
 
-	public GUI() {
+	public SchachGUI() {
 		super();
 		Container container = getContentPane();
 		canvas = new ShowCanvas();
@@ -61,12 +38,7 @@ public class GUI extends JFrame{
 		    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		    window.setBounds(0, 0, 800, 827);
 		    window.setTitle("Schachapp");
-		    MyCanvas.xSize = 110;
-		    window.getContentPane().add(new MyCanvas());
 		    window.setVisible(true);
-		    
-		    
-		  
   }
   
   public static void darst_wK(int x, int y) throws IOException {
@@ -76,6 +48,13 @@ public class GUI extends JFrame{
 	    window.add(picLabel);
 	    
   }
+
+public static void figurenauswahl(int x2, int y2,String farbe) {
+	// TODO Auto-generated method stub
+	canvas.figurenauswahl(x2, y2, farbe);
+}
+
+
 }
 class ShowCanvas extends JPanel {
 	
@@ -86,6 +65,9 @@ class ShowCanvas extends JPanel {
 	static Color Markierung_hell = new Color(main, side, side);
 	static Color Markierung_dunkel = new Color((int) (dark_factor*main), (int) (dark_factor*side), (int) (dark_factor*side));
 
+    public static boolean figurenauswahl=false; int X, Y, x1, x2, y1, y2; //x1,y1 linke, obere Ecke, x2,y2 rechte, untere Ecke des Fensters zur Figurenauswahl, 
+    String farbe="";
+	
 	/**
 	 * 
 	 */
@@ -136,7 +118,34 @@ class ShowCanvas extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				mouseX = arg0.getX(); mouseY = arg0.getY();
-				Controller.spieler_aktion();
+			
+				if(figurenauswahl) {
+				
+					if(mouseX>x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+						int begrenzungDame = x1+image_wD.getWidth(); 
+						int begrenzungTurm = x1+image_wD.getWidth()+image_wT.getWidth()+5;
+						int begrenzungPferd = x1+image_wD.getWidth()+image_wT.getWidth()+image_wP.getWidth()+5;
+						System.out.println(begrenzungDame+" "+begrenzungTurm+" "+begrenzungPferd);
+						if(mouseX < begrenzungDame) {
+							x1 = x2 = y1 = y2 = -1; farbe = ""; figurenauswahl = false;
+							SchachController.bauerntausch(X, Y, "Dame", farbe);
+						}
+						else if(mouseX > begrenzungDame && mouseX < begrenzungTurm) {
+							x1 = x2 = y1 = y2 = -1; farbe = ""; figurenauswahl = false;
+							SchachController.bauerntausch(X, Y, "Turm", farbe);
+						}
+						else if(mouseX > begrenzungTurm && mouseX < begrenzungPferd) {
+							x1 = x2 = y1 = y2 = -1; farbe = ""; figurenauswahl = false;
+							SchachController.bauerntausch(X, Y, "Pferd", farbe);
+						}
+						else if(mouseX > begrenzungPferd) {
+							x1 = x2 = y1 = y2 = -1; farbe = ""; figurenauswahl = false;
+							SchachController.bauerntausch(X, Y, "L‰ufer", farbe);
+						}
+					}
+					return; 
+				}
+				SchachController.spieler_aktion();
 			}
 		});
 		
@@ -232,23 +241,34 @@ class ShowCanvas extends JPanel {
 		Graphics2D wp = image_Wallpaper.createGraphics();
 		wp.drawImage(image_Wallpaper, 0, 0, this); //TODO 
 	}
+	
+	
+	public void figurenauswahl(int X2, int Y2, String Farbe) {
+		figurenauswahl = true;
+		farbe = Farbe;
+		X = X2; Y = Y2;
+		x2 = X2; y2 = Y2;
+		repaint();
+	}
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
 		
+	
+		
 		
   		g.setColor(Color.GRAY);
 		for(int a=0; a<8;a++) {
 			  for(int b=0; b<8;b++) {
-				  	if(Controller.markiert && Controller.auswahlX == a && Controller.auswahlY == b) {
+				  	if(SchachController.markiert && SchachController.auswahlX == a && SchachController.auswahlY == b) {
 				  	    if(a%2 != b%2)g.setColor(Markierung_dunkel);
 				  	    else g.setColor(Markierung_hell);
 				  		g.fillRect(a*100, b*100, 100, 100);
 				  		g.setColor(Color.GRAY);
 				  		continue;
 				  	}
-				  	if(Controller.vorschl‰ge[a][b]) {
+				  	if(SchachController.vorschl‰ge[a][b]) {
 				  		if(a%2 != b%2)g.setColor(Vorschlag_dunkel);
 				  	    else g.setColor(Vorschlag_hell);
 				  	    g.fillRect(a*100+2, b*100+2, 98, 98);
@@ -280,14 +300,82 @@ class ShowCanvas extends JPanel {
 			}
 		}	
 		
+		if(figurenauswahl) {
+			System.out.println("FIgurenauswahl:"+x2+" "+y2);
+			int breite=0, hoehe=0;
+			if(SchachController.farbe.equals("weiﬂ")){
+				breite = image_wD.getWidth()+image_wL.getWidth()+image_wT.getWidth()+image_wP.getWidth()+(5*4)+5; hoehe = Math.max(Math.max(image_wD.getHeight(),image_wL.getHeight()), Math.max(image_wT.getHeight(),image_wP.getHeight()))+10;
+			}
+			else if(SchachController.farbe.equals("schwarz")) {
+				breite = image_sD.getWidth()+image_sL.getWidth()+image_sT.getWidth()+image_sP.getWidth()+(5*4)+5; hoehe = Math.max(Math.max(image_sD.getHeight(),image_sL.getHeight()), Math.max(image_sT.getHeight(),image_sP.getHeight()))+10;
+			}
+			if(x2<4) {
+				x1 = x2*100+50; 
+			}
+			else if(x2>=4) {
+				x1 = x2*100-breite+50;
+			}
+			if(y2 == 7) {
+				y1=(y2*100)-50;
+			}
+			else if(y2 == 0) {
+				y1=(y2*100)+50;
+			}
+			y2=y1+hoehe;
+			x2 = x1+breite; 
+			System.out.println("x1:"+x1+", y1:"+y1+", x2: "+x2+" , y2: "+y2);
+			System.out.println("TESTUS 777");
+			g.setColor(Color.black);
+			g.fillRect(x1, y1, breite,hoehe);
+			
+			g.setColor(Color.gray);
+			System.out.println(SchachController.farbe);
+			if(farbe.equals("weiﬂ")){
+				g.fillRect(x1+5, y1+5, image_wD.getWidth(), image_wD.getWidth());
+				g2D.drawImage(image_wD, x1+5, y1+5, this);
+				x1+=image_wD.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_wT.getWidth(), image_wT.getWidth());
+				g2D.drawImage(image_wT, x1+5, y1+5, this);
+				x1+=image_wT.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_wP.getWidth(), image_wP.getWidth());
+				g2D.drawImage(image_wP, x1+5, y1+5, this);
+				x1+=image_wP.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_wL.getWidth(), image_wL.getWidth());
+				g2D.drawImage(image_wL, x1+5, y1+5, this);
+				x1+=image_wL.getWidth()+5;
+			}
+			else if(farbe.equals("schwarz")){
+				g.fillRect(x1+5, y1+5, image_sD.getWidth(), image_sD.getWidth());
+				g2D.drawImage(image_sD, x1+5, y1+5, this);
+				x1+=image_sD.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_sT.getWidth(), image_sT.getWidth());
+				g2D.drawImage(image_sT, x1+5, y1+5, this);
+				x1+=image_sT.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_sP.getWidth(), image_sP.getWidth());
+				g2D.drawImage(image_sP, x1+5, y1+5, this);
+				x1+=image_sP.getWidth()+5;
+				
+				g.fillRect(x1+5, y1+5, image_sL.getWidth(), image_sL.getWidth());
+				g2D.drawImage(image_sL, x1+5, y1+5, this);
+				x1+=image_sL.getWidth()+5;
+			}
+			x1-=breite+5;
+
+		}
+	
 		if(!Schachbrett.spiel_aktiv) {
 			g.setColor(Color.white);
 			g.fillRect(0, 0, 1000, 1000);
 			g2D.drawImage(image_Wallpaper, 0, 0, this);
 			g.setColor(Color.red); 
-			Controller.changeFarbe();
+			SchachController.changeFarbe();
 			g.setFont(new Font("Arial", Font.PLAIN, 20)); 
-			g.drawString("Spiel zuende! "+Controller.farbe+" gewinnt!", 370, 400);
+			g.drawString("Spiel zuende! "+SchachController.farbe+" gewinnt!", 370, 400);
 			g.drawString("Zum beenden klicken", 400, 500);
 		}
 	}

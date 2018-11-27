@@ -3,13 +3,13 @@ package schach;
 import java.io.IOException;
 import javax.swing.JPanel;
 
-public class Controller extends JPanel{
-	static GUI G;
+public class SchachController extends JPanel{
+	static SchachGUI G;
 	
 	//Variablen für KI
 		static boolean spiel_modus_KI= true;
 		static boolean farbe_KI_schwarz = true;
-		static SimpleKI k;
+		static SchachKI k;
 		
 	private static final long serialVersionUID = 1L;
 	static Schachbrett S = new Schachbrett();
@@ -62,8 +62,29 @@ public class Controller extends JPanel{
 		return f+t;
 	}
 	
-	public static Figur getFigur(int x, int y) {
+	public static SchachFigur getFigur(int x, int y) {
 		return Schachbrett.figuren[x][y];
+	}
+	
+	public static void bauerntausch(int x2, int y2, String figur, String Farbe) {
+
+		System.out.println("tausche gegen "+figur);
+		
+		changeFarbe();
+		switch(figur) {
+			case "Läufer": {Schachbrett.figuren[x2][y2] = new Läufer(x2, y2, farbe,true); break;}
+			case "Pferd": {Schachbrett.figuren[x2][y2] = new Pferd(x2, y2, farbe,true); break;}
+			case "Turm": {Schachbrett.figuren[x2][y2] = new Turm(x2, y2, farbe,true); break;}
+			case "Dame": {Schachbrett.figuren[x2][y2] = new Dame(x2, y2, farbe,true); break;}
+		}
+		auswahl = ""; auswahlX = -1; auswahlY = -1;
+		markiert = false;
+		Schachbrett.print();	
+		System.out.println(Schachbrett.figuren[x2][y2].typ);
+		G.repaint();
+		
+		SchachController.auswahlX = SchachController.auswahlY = -1; SchachController.auswahl = "";
+		changeFarbe();
 	}
 
 	public static void setFigure(int x, int y) {
@@ -73,14 +94,25 @@ public class Controller extends JPanel{
 		if(!Schachbrett.bewegungAusführen(auswahlX, auswahlY, x, y, farbe))return;	
 		
 		//wenn KI eingeschaltet reagiert jetzt die KI
-				if(spiel_modus_KI) {
-					Schachbrett.automatic = true;
-					SimpleKI.ziehen();
-					if(!SimpleKI.FEHLER)Schachbrett.bewegungAusführen(SimpleKI.KI_x1, SimpleKI.KI_y1, SimpleKI.KI_x2, SimpleKI.KI_y2, SimpleKI.farbe);
-					Schachbrett.automatic = false;
-					changeFarbe();
+		if(spiel_modus_KI) {
+			Schachbrett.automatic = true;
+			SchachKI.ziehen();
+			if(!SchachKI.FEHLER)Schachbrett.bewegungAusführen(SchachKI.KI_x1, SchachKI.KI_y1, SchachKI.KI_x2, SchachKI.KI_y2, SchachKI.farbe);
+			Schachbrett.automatic = false;
+			changeFarbe();
 
+		}
+				
+		//Bauer gegen Dame tauschen
+		if(Schachbrett.figuren[x][y].typ.equals("Bauer")) {
+			if((farbe.equals("schwarz") && y==0) || (farbe.equals("weiß") && y==7)) {
+				
+				if(Schachbrett.automatic == false)SchachGUI.figurenauswahl(x,y,farbe);
+				else { //KI wählt Dame
+					bauerntausch(x,y, "Dame", farbe);				
 				}
+			}
+		}
 		
 		auswahl = ""; auswahlX = -1; auswahlY = -1;
 		markiert = false;
@@ -97,21 +129,20 @@ public class Controller extends JPanel{
 		if(!Schachbrett.spiel_aktiv) {
 			System.exit(0);
 		}
-		if(!Controller.markiert) {
-			Controller.auswahl = Controller.markFigure((int) (ShowCanvas.mouseX/100), (int) (ShowCanvas.mouseY/100));
-			if(Controller.auswahl.equals(""))return;
-			Controller.markiert = true;
-			System.out.println(Controller.auswahl);
+		if(!SchachController.markiert) {
+			SchachController.auswahl = SchachController.markFigure((int) (ShowCanvas.mouseX/100), (int) (ShowCanvas.mouseY/100));
+			if(SchachController.auswahl.equals(""))return;
+			SchachController.markiert = true;
+			System.out.println(SchachController.auswahl);
 			G.repaint();
 		}
-		else if(Controller.markiert) {
-			Controller.markiert =false;
-			Controller.setFigure((int) (ShowCanvas.mouseX/100), (int) (ShowCanvas.mouseY/100));
-			Controller.auswahlX = Controller.auswahlY = -1; Controller.auswahl = "";
-			System.out.println(Controller.auswahl);
+		else if(SchachController.markiert) {
+			SchachController.markiert =false;
+			SchachController.setFigure((int) (ShowCanvas.mouseX/100), (int) (ShowCanvas.mouseY/100));
+			SchachController.auswahlX = SchachController.auswahlY = -1; SchachController.auswahl = "";
+			System.out.println(SchachController.auswahl);
 			G.repaint();
 		}	
-		
 		return;
 	}
 	
@@ -119,7 +150,7 @@ public class Controller extends JPanel{
 		S.print();
 		zuruecksetzenVorschlaege();
 	
-		G = new GUI();
+		G = new SchachGUI();
 		G.repaint();
 	}
 	
@@ -127,7 +158,7 @@ public class Controller extends JPanel{
 		S.print();
 		zuruecksetzenVorschlaege();
 	
-		G = new GUI();
+		G = new SchachGUI();
 		G.repaint();
 		
 	}

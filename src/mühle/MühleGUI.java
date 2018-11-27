@@ -13,28 +13,9 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-class MyCanvas extends JComponent {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	public static int xSize = 100;
-	public static String[][] figuren = new String[8][8];
 
-	public void paint(Graphics g) {
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				if (x % 2 != y % 2)
-					g.fillRect(x * 100, y * 100, 100, 100);
-				else
-					g.drawRect(x * 100, y * 100, 100, 100);
-			}
-		}
-	}
-}
-
-public class GUI extends JFrame {
+public class MühleGUI extends JFrame {
 	/**
 	 * 
 	 */
@@ -44,13 +25,13 @@ public class GUI extends JFrame {
 
 	ShowCanvas canvas;
 
-	public GUI() {
+	public MühleGUI() {
 		super();
 		Container container = getContentPane();
 		canvas = new ShowCanvas();
 		container.add(canvas);
 		setSize(800, 835);
-		setTitle("Mühle V0.5");
+		setTitle("Mühle V0.55");
 		setVisible(true);
 		setResizable(false);
 	}
@@ -59,8 +40,7 @@ public class GUI extends JFrame {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setBounds(0, 0, 800, 800);
 		window.setTitle("Mühle");
-		MyCanvas.xSize = 110;
-		window.getContentPane().add(new MyCanvas());
+		
 		window.setVisible(true);
 
 	}
@@ -82,7 +62,7 @@ class ShowCanvas extends JPanel {
 	static int x, y;
 
 	ShowCanvas() {
-		setBackground(Color.LIGHT_GRAY);
+		setBackground(Color.WHITE);
 		setSize(450, 400);
 		addMouseListener(new MouseListener() {
 
@@ -104,7 +84,16 @@ class ShowCanvas extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Controller.spieler_aktion();
+				x = (arg0.getX()-90);
+				y = (arg0.getY()-90);
+				if((Math.abs((x%100)) < 25 || Math.abs((x%100)) > 75) && (Math.abs(y%100) < 25 || Math.abs((y%100)) > 75)) {
+					x+=25; y+=25;
+					x/=100; y/=100;
+				}
+				else {
+					x = -1; y = -1;
+				}
+				MühleController.spieler_aktion();
 			}
 		});
 
@@ -124,29 +113,12 @@ class ShowCanvas extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
+		
+	
+
 
 		g.setColor(Color.BLACK);
-
 		int Offset = 90;
-		// Punkte malen
-		int x=ringkoordinateInkoordinate(Controller.auswahlX, Controller.auswahlRing);
-		int y=ringkoordinateInkoordinate(Controller.auswahlY, Controller.auswahlRing);
-		for (int a = 0; a < 7; a++) {
-			for (int b = 0; b < 7; b++) {
-				if (a == 3 && b == 3)
-					continue;
-				if (a == 3 || b == 3 || a == b || (a + b) == 6) {
-					if (Controller.markiert && x == a && y == b) {
-						g.setColor(Markierung);
-						g.fillOval(a * 100 + Offset-15, b * 100 + Offset-15, 30, 30);
-						g.setColor(Color.GRAY);
-						continue;
-					}
-					g.fillOval(a * 100 + Offset-15, b * 100 + Offset-15, 30, 30);
-				}
-
-			}
-		}
 
 		// Vertikale Linien malen
 		g.drawLine(0 * 100 + Offset, 0 * 100 + Offset, 0 * 100 + Offset, 6 * 100 + Offset);
@@ -163,30 +135,57 @@ class ShowCanvas extends JPanel {
 		g.drawLine(2 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset);
 		g.drawLine(1 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset);
 		g.drawLine(0 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset);
+
+		// Punkte malen
+		int x=ringkoordinateInkoordinate(MühleController.auswahlX, MühleController.auswahlRing);
+		int y=ringkoordinateInkoordinate(MühleController.auswahlY, MühleController.auswahlRing);
+		for (int a = 0; a < 7; a++) {
+			for (int b = 0; b < 7; b++) {
+				if (a == 3 && b == 3)
+					continue;
+				if (a == 3 || b == 3 || a == b || (a + b) == 6) {
+					if (MühleController.markiert && x == a && y == b) {
+						g.setColor(Markierung);
+						g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
+						g.setColor(Color.GRAY);
+						continue;
+					}
+					g.setColor(Color.BLACK);
+					g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
+					
+					g.setColor(Color.lightGray);
+					g.fillOval(a * 100 + Offset-20, b * 100 + Offset-20, 40, 40);
+
+				}
+
+			}
+		}
+
+		
 		
 		//Spielfiguren malen
 		for (int a = 0; a < 3; a++) {
 			for (int b = 0; b < 3; b++) {
 				for (int ring = 0; ring < 3; ring++) {
 					//System.out.println(a+" "+b+" "+ring+": "+Spielfeld.figuren[a][b][ring].typ);
-					if(Spielfeld.figuren[a][b][ring].typ.equals("NULL"))continue;
+					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("NULL"))continue;
 					x=ringkoordinateInkoordinate(a, ring);
 					y=ringkoordinateInkoordinate(b, ring);
 
-					if(Spielfeld.figuren[a][b][ring].typ.equals("weiß")) g.setColor(Color.WHITE);
-					if(Spielfeld.figuren[a][b][ring].typ.equals("schwarz")) g.setColor(Color.BLACK);
+					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("weiß")) g.setColor(Color.WHITE);
+					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("schwarz")) g.setColor(Color.BLACK);
 					g.fillOval(x * 100 + Offset, y * 100 + Offset, 50, 50);
 				}
 			}
 		}
 
-		if (!Spielfeld.spiel_aktiv) {
+		if (!MühleSpielfeld.spiel_aktiv) {
 			g.setColor(Color.white);
 			g.fillRect(0, 0, 1000, 1000);
 			g.setColor(Color.red);
-			Controller.changeFarbe();
+			MühleController.changeFarbe();
 			g.setFont(new Font("Arial", Font.PLAIN, 20));
-			g.drawString("Spiel zuende! " + Controller.farbe + " gewinnt!", 370, 400);
+			g.drawString("Spiel zuende! " + MühleController.farbe + " gewinnt!", 370, 400);
 			g.drawString("Zum beenden klicken", 400, 500);
 		}
 	}
