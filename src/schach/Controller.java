@@ -14,7 +14,7 @@ public class Controller extends JPanel{
 	private static final long serialVersionUID = 1L;
 	static Schachbrett S = new Schachbrett();
 	static String farbe="weiﬂ";
-	int mouseX =0; int mouseY=0; static String auswahl=""; static int auswahlX = -1; static int auswahlY=-1;
+	int mouseX =0; int mouseY=0; static String auswahl=""; static isnt auswahlX = -1; static int auswahlY=-1;
 	static boolean markiert = false;
 	static boolean[][] vorschl‰ge = new boolean[8][8];
 
