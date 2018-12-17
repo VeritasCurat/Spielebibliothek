@@ -127,6 +127,11 @@ class ShowCanvas extends JPanel {
 		g.drawLine(4 * 100 + Offset, 2 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset);
 		g.drawLine(5 * 100 + Offset, 1 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset);
 		g.drawLine(6 * 100 + Offset, 0 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset);
+		
+		g.drawLine(0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset, 3 * 100 + Offset);
+		g.drawLine(4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset, 3 * 100 + Offset);
+
+		
 
 		// Horizontale Linien malen
 		g.drawLine(0 * 100 + Offset, 0 * 100 + Offset, 6 * 100 + Offset, 0 * 100 + Offset);
@@ -135,6 +140,10 @@ class ShowCanvas extends JPanel {
 		g.drawLine(2 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset);
 		g.drawLine(1 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset);
 		g.drawLine(0 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset);
+		
+		g.drawLine(3 * 100 + Offset, 0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset);
+		g.drawLine(3 * 100 + Offset, 4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset);
+
 
 		// Punkte malen
 		int x=ringkoordinateInkoordinate(MühleController.auswahlX, MühleController.auswahlRing);
@@ -150,7 +159,7 @@ class ShowCanvas extends JPanel {
 						g.setColor(Color.GRAY);
 						continue;
 					}
-					g.setColor(Color.BLACK);
+					g.setColor(Color.darkGray);
 					g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
 					
 					g.setColor(Color.lightGray);
@@ -167,14 +176,14 @@ class ShowCanvas extends JPanel {
 		for (int a = 0; a < 3; a++) {
 			for (int b = 0; b < 3; b++) {
 				for (int ring = 0; ring < 3; ring++) {
-					//System.out.println(a+" "+b+" "+ring+": "+Spielfeld.figuren[a][b][ring].typ);
-					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("NULL"))continue;
+					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("NULL") || MühleSpielfeld.figuren[a][b][ring].typ.equals(""))continue;
+					//System.out.println(a+" "+b+" "+ring+": "+MühleSpielfeld.figuren[a][b][ring].typ+" "+MühleSpielfeld.figuren[a][b][ring].farbe);
 					x=ringkoordinateInkoordinate(a, ring);
 					y=ringkoordinateInkoordinate(b, ring);
 
-					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("weiß")) g.setColor(Color.WHITE);
-					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("schwarz")) g.setColor(Color.BLACK);
-					g.fillOval(x * 100 + Offset, y * 100 + Offset, 50, 50);
+					if(MühleSpielfeld.figuren[a][b][ring].farbe.equals("weiß")) g.setColor(Color.WHITE);
+					if(MühleSpielfeld.figuren[a][b][ring].farbe.equals("schwarz")) g.setColor(Color.BLACK);
+					g.fillOval(x * 100 + Offset-20, y * 100 + Offset-20, 40, 40);
 				}
 			}
 		}

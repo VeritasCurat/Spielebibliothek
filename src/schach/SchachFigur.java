@@ -2,6 +2,10 @@
 package schach;
 
 public class SchachFigur {
+	/**
+	 * Klasse stellt Elterklasse für Schachfiguren da.
+	 * 
+	 */
 	boolean automatic = true;
 	boolean bewegt = false;
 	
@@ -25,8 +29,15 @@ public class SchachFigur {
 
 	}
 
+	/**
+	 * Berechnet ob Bewegung legal (ohne den Kontext der anderen Figuren) nach den Bewegungregeln der Figur ist.
+	 * @param i
+	 * @param j
+	 * @return true, falls Bewegung legal , sonst false
+	 */
 	boolean move(int i, int j) {
-		System.out.println("FEHLER!");
+		System.out.println("Falscher Cast: "+typ);
+		System.exit(0);
 		return false;
 	}
 
@@ -45,16 +56,16 @@ class Bauer extends  SchachFigur{
 	
 	//verifiziert ob Bewegung dem Muster dieser Figur entspricht
 	boolean move(int x, int y) {
-		if(x == 0 || x ==  -1 || x == 1) {
+		if(Math.abs(y) < 2 && x == 0 || x ==  -1 || x == 1) {
 			if(farbe.equals("weiß")) {
-				if(Y == 1 && y == 2 && x == 0) return true;
 				if(y == 1) return true;
 			}
 			if(farbe.equals("schwarz")) {
-				if(Y == 6 && y == -2 && x==0) return true;
 				if(y == -1) return true;
 			}
 		}
+		if(Y == 1 && y == 2 && x == 0) return true;
+		if(Y == 6 && y == -2 && x == 0) return true;
 		if(!automatic)System.out.println("Du kannst den Bauern nicht so bewegen!");
 		return false;
 	}
