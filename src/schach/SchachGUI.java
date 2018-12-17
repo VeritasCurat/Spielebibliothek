@@ -29,7 +29,7 @@ public class SchachGUI extends JFrame{
 		canvas = new ShowCanvas();
 		container.add(canvas);
 		setSize(800, 835);
-		setTitle("Schachapp V0.8");
+		setTitle("Schachapp V0.9");
 		setVisible(true);
 		setResizable(false);
 	}
@@ -41,14 +41,7 @@ public class SchachGUI extends JFrame{
 		    window.setVisible(true);
   }
   
-  public static void darst_wK(int x, int y) throws IOException {
-	  BufferedImage myPicture = ImageIO.read(new File("/home/johannes/eclipse-workspace/Schach/src/schach/Bilder/weiﬂerKˆnig.png"));
-	    JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-	    picLabel.setBounds(0, 0, 100, 100);
-	    window.add(picLabel);
-	    
-  }
-
+  
 public static void figurenauswahl(int x2, int y2,String farbe) {
 	// TODO Auto-generated method stub
 	canvas.figurenauswahl(x2, y2, farbe);
@@ -57,6 +50,8 @@ public static void figurenauswahl(int x2, int y2,String farbe) {
 
 }
 class ShowCanvas extends JPanel {
+	
+	Schachbrett lichtspiel;
 	
 	static int main = 255; static int side = 200; static double dark_factor = 0.5;
 	static Color Vorschlag_hell = new Color(side, main, side);
@@ -77,7 +72,6 @@ class ShowCanvas extends JPanel {
 	MediaTracker mt = new MediaTracker(this);
 
 	BufferedImage image_wK;
-	//MovableImage image_wK = new MovableImage("C:\\Users\\Johannes\\eclipse-workspace\\Schach\\src\\Bilder\\weiﬂerKˆnig.png", mt, this);
 	BufferedImage image_wD;
 	BufferedImage image_wT;
 	BufferedImage image_wP;
@@ -149,24 +143,28 @@ class ShowCanvas extends JPanel {
 			}
 		});
 		
-		String pfad=new File("").getAbsolutePath();
+		String pfad = new File("").getAbsolutePath();
 		System.out.println(pfad);
+		if(pfad.contains("Spielebibliothek")) {
+			pfad+="\\src\\schach";
+		}
 
-		Image img_wK = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂerKˆnig.png");
-		Image img_wD = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂeDame.png");
-		Image img_wT = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂerTurm.png");
-		Image img_wP = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂesPferd.png");
-		Image img_wL = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂerL‰ufer.png");
-		Image img_wB = getToolkit().getImage(pfad+"\\src\\Bilder\\weiﬂerBauer.png");
 
-		Image img_sK = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzerKˆnig.png");
-		Image img_sD = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzeDame.png");
-		Image img_sT = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzerTurm.png");
-		Image img_sP = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzesPferd.png");
-		Image img_sL = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzerL‰ufer.png");
-		Image img_sB = getToolkit().getImage(pfad+"\\src\\Bilder\\schwarzerBauer.png");
+		Image img_wK = getToolkit().getImage(pfad+"\\sources\\weiﬂerKˆnig.png");
+		Image img_wD = getToolkit().getImage(pfad+"\\sources\\weiﬂeDame.png");
+		Image img_wT = getToolkit().getImage(pfad+"\\sources\\weiﬂerTurm.png");
+		Image img_wP = getToolkit().getImage(pfad+"\\sources\\weiﬂesPferd.png");
+		Image img_wL = getToolkit().getImage(pfad+"\\sources\\weiﬂerL‰ufer.png");
+		Image img_wB = getToolkit().getImage(pfad+"\\sources\\weiﬂerBauer.png");
 
-		Image img_Wallpaper= getToolkit().getImage(pfad+"\\src\\Bilder\\Schach_Wallpaper.jpg");
+		Image img_sK = getToolkit().getImage(pfad+"\\sources\\schwarzerKˆnig.png");
+		Image img_sD = getToolkit().getImage(pfad+"\\sources\\schwarzeDame.png");
+		Image img_sT = getToolkit().getImage(pfad+"\\sources\\schwarzerTurm.png");
+		Image img_sP = getToolkit().getImage(pfad+"\\sources\\schwarzesPferd.png");
+		Image img_sL = getToolkit().getImage(pfad+"\\sources\\schwarzerL‰ufer.png");
+		Image img_sB = getToolkit().getImage(pfad+"\\sources\\schwarzerBauer.png");
+
+		Image img_Wallpaper= getToolkit().getImage(pfad+"\\sources\\Schach_Wallpaper.jpg");
 		
 		mt.addImage(img_wK, 1);
 		mt.addImage(img_wD, 2);
@@ -255,7 +253,7 @@ class ShowCanvas extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
 		
-	
+		
 		
 		
   		g.setColor(Color.GRAY);
@@ -283,8 +281,8 @@ class ShowCanvas extends JPanel {
 				
 		for(int b=0; b<8; b++) {
 			for(int a=0; a<8; a++) {
-				if(Schachbrett.figuren[a][b].typ.equals("") || Schachbrett.figuren[a][b].farbe.equals("")) continue;
-				String z = Schachbrett.figuren[a][b].farbe.substring(0,1)+Schachbrett.figuren[a][b].typ.substring(0,1);
+				if(lichtspiel.figuren[a][b].typ.equals("") || lichtspiel.figuren[a][b].farbe.equals("")) continue;
+				String z = lichtspiel.figuren[a][b].farbe.substring(0,1)+lichtspiel.figuren[a][b].typ.substring(0,1);
 				if(z != null && z.equals("wK")) {			g2D.drawImage(image_wK, a*100, b*100, this); continue;}
 				else if(z != null && z.equals("wD")) {	g2D.drawImage(image_wD, a*100, b*100, this); continue;}
 				else if(z != null && z.equals("wB")) {	g2D.drawImage(image_wB, a*100, b*100, this); continue;}
@@ -368,7 +366,7 @@ class ShowCanvas extends JPanel {
 
 		}
 	
-		if(!Schachbrett.spiel_aktiv) {
+		if(!lichtspiel.spiel_aktiv) {
 			g.setColor(Color.white);
 			g.fillRect(0, 0, 1000, 1000);
 			g2D.drawImage(image_Wallpaper, 0, 0, this);
@@ -382,29 +380,4 @@ class ShowCanvas extends JPanel {
 
 }
 
-@SuppressWarnings("serial")
-//TODO: 
-class MovableImage extends JPanel{
-	BufferedImage a;
-	Image A;
-	
-	public MovableImage(String source, MediaTracker mt, JPanel S) {
-		/*
-		 * 	BufferedImage image_wD;
-		 * 	Image img_wD = getToolkit().getImage("C:\\Users\\Johannes\\eclipse-workspace\\Schach\\src\\Bilder\\weiﬂeDame.png")
-		*/
-		
-		A = getToolkit().getImage(source);
-		System.out.println(A.getAccelerationPriority());
-		System.out.println(A.getWidth(this)); //TODO: hier liegt das Problem "this" = JPanel?
-		mt.addImage(A, 1);
-		
-		a = new BufferedImage(A.getWidth(this), A.getHeight(this),	BufferedImage.TYPE_INT_ARGB);
-		Graphics2D wK = ((BufferedImage) A).createGraphics();
-		wK.drawImage(A, 0, 0, this);
-	}
-	
-	public BufferedImage retImage() {
-		return a;
-	}
-}
+

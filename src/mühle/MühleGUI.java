@@ -139,6 +139,10 @@ class ShowCanvas extends JPanel {
 		g.drawLine(2 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset, 4 * 100 + Offset);
 		g.drawLine(1 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset);
 		g.drawLine(0 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset);
+		
+		g.drawLine(3 * 100 + Offset, 0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset);
+		g.drawLine(3 * 100 + Offset, 4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset);
+
 
 		//Vertikale Verbindungslinien malen
 		g.drawLine(3 * 100 + Offset, 0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset);
@@ -162,7 +166,7 @@ class ShowCanvas extends JPanel {
 						g.setColor(Color.GRAY);
 						continue;
 					}
-					g.setColor(Color.BLACK);
+					g.setColor(Color.darkGray);
 					g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
 					
 					g.setColor(Color.lightGray);
@@ -193,6 +197,7 @@ class ShowCanvas extends JPanel {
 						g.setColor(Color.RED.darker().darker().darker());
 						g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
 					}
+
 				}
 			}
 		}

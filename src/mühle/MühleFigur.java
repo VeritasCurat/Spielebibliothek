@@ -19,6 +19,8 @@ public class MühleFigur {
 	}
 
 	boolean move(int i, int j) {
+		System.out.println("FALSCHER CAST!");
+		System.exit(-1);
 		return false;
 	}
 }
@@ -59,6 +61,7 @@ class Springer extends  MühleFigur{
 	}
 	
 	boolean move(int x, int y,int ring) {
+
 		return true;
 	}
 	

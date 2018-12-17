@@ -20,6 +20,7 @@ public class MühleSpielfeld {
 	
 	 int anz_weiß=0;
 	 int anz_schwarz=0;
+
 		
 	/* (XY) Koordinaten innerhalb von Ring
 	 * 00 - 01 - 02
@@ -54,6 +55,7 @@ public class MühleSpielfeld {
 	}
 	
 	public boolean setFigure(int x1, int y1, int ring, String farbe) {
+
 		//Das ist garkein Feld
 		if(x1 < 0 || y1 < 0 || x1 > 2 || y1 > 2) {
 			System.out.println("Das ist garkein Feld");
@@ -86,19 +88,20 @@ public class MühleSpielfeld {
 	}
 	
 	public boolean bewegungPrüfen(int x1,int y1, int z1, int x2, int y2, int z2, String farbe) {
+
 		//Das ist garkein Feld
-		if(x1 < 0 || y1 < 0 || x1 > 7 || y1 > 7) {
+		if(x1 < 0 || y1 < 0 || x1 > 2 || y1 > 2) {
 			if(!automatic)System.out.println("Das ist garkein Feld");
 			return false;
 		}	
 		//auf dem Feld steht keine Figur
-		if(figuren[x1][y1][z1].typ.equals("")) {
+		if(figuren[x1][y1][z1].typ.equals("") || figuren[x1][y1][z1].typ.equals("NULL")) {
 			if(!automatic)System.out.println("auf dem Feld steht keine Figur");
 			return false;
 		}
 		//das ist nicht ihre Figur
 		if(!figuren[x1][y1][z1].farbe.equals(farbe)) {
-			if(!automatic)System.out.println("das ist nicht ihre Figur: "+x1+", "+y1);
+			if(!automatic)System.out.println("das ist nicht ihre Figur: "+x1+", "+y1+" "+z1);
 			return false;
 		}
 		//Hier steht schon eine Figur
@@ -110,6 +113,7 @@ public class MühleSpielfeld {
 		if(figuren[x1][y1][z1] instanceof Springer)return ((Springer)figuren[x1][y1][z1]).move(x2, y2,z2);
 		System.out.println("FEHLER!!");
 		return false;			
+
 	}
 	
 	//wechselt für den Spieler der farbe f: Läufer => Springer
@@ -126,7 +130,7 @@ public class MühleSpielfeld {
 	public boolean bewegungAusführen(int x1,int y1, int z1, int x2, int y2, int z2, String farbe){
 		if(bewegungPrüfen(x1,y1,z1,x2,y2,z2,farbe)){
 			//Spielende
-			if(anz_weiß == 0||anz_schwarz==0)spiel_aktiv = false;
+			if(MühleController.anz_weiß == 0||MühleController.anz_schwarz==0)spiel_aktiv = false;
 			//Zug Gültig
 			//int z2 = z + (Math.abs(x1+y1) % 2)*(1-(x1+y1+dx+dy)); 
 
@@ -138,6 +142,7 @@ public class MühleSpielfeld {
 			figuren[x1][y1][z1] = new MühleFigur(x1, y1, z1, "NULL");
 			return true;
 		}
+		System.out.println("fehlschlag");
 		return false;
 	}
 	

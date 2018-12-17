@@ -21,6 +21,9 @@ public class MühleController extends JPanel{
 	
 	static int phaseWeiß=0; static int phaseSchwarz=0;//0: setzen, 1: 4-9 Figuren, 2: 1-3 Figuren
 	
+	static int anz_weiß=0;
+	static int anz_schwarz=0;
+	
 	public static void changeFarbe() {
 		if(farbe.equals("weiß"))farbe = "schwarz";
 		else if(farbe.equals("schwarz"))farbe = "weiß";
@@ -40,6 +43,7 @@ public class MühleController extends JPanel{
 		else if(x==2 || y==2 || x==4 || y==4) {
 			return 2;
 		}
+
 		else return -1;
 	}
 	
@@ -67,11 +71,13 @@ public class MühleController extends JPanel{
 		String f = S.figuren[k[0]][k[1]][k[2]].farbe.substring(0,1);
 		String t = S.figuren[k[0]][k[1]][k[2]].typ.substring(0,1);
 		System.out.println(x+" "+y+" "+k[2]+": "+f+t);
+
 		if(!f.equals(farbe.substring(0,1))) {
 			System.out.println("falsche Farbe: "+f+"!="+farbe.substring(0,1));
 			return "";
 		}
-		mark = f+t; markX = k[0]; markY = k[1]; markRing = k[2];
+
+		auswahl = f+t; auswahlX = x; auswahlY =y; auswahlRing = ring;
 		return f+t;
 	}
 	
@@ -84,6 +90,7 @@ public class MühleController extends JPanel{
 	public static void setFigure(int x, int y, int ring, String farbe) {
 		//System.out.println("GUI bewegung: "+mark+": "+markX+" "+markY+" "+markRing+" => "+x+" "+y+" "+ring);
 		if(!S.bewegungAusführen(markX, markY, markRing, x, y, ring, farbe))return;	
+
 		
 		//wenn KI eingeschaltet reagiert jetzt die KI
 //				if(spiel_modus_KI) {
@@ -106,10 +113,12 @@ public class MühleController extends JPanel{
 	}
 	
 	public static void spieler_aktion() {
+		if(ShowCanvas.x==-1 || ShowCanvas.y==-1)return;
 		int[] k = koordinateInRingKoordinate(ShowCanvas.x, ShowCanvas.y);
 		if(k==null)return;
 		auswahlX = k[0]; auswahlY = k[1]; auswahlRing = k[2];
 		if(!S.spiel_aktiv) {
+
 			System.exit(0);
 		}
 		if(farbe.equals("weiß") && wegnehmen_spieler.equals("schwarz")) {
@@ -159,6 +168,7 @@ public class MühleController extends JPanel{
 		if(((farbe.equals("schwarz") && phaseSchwarz>0) || (farbe.equals("weiß") && phaseWeiß>0) ) && !MühleController.markiert) {
 			MühleController.mark = MühleController.markFigure((int) ShowCanvas.x, (int) (ShowCanvas.y));
 			if(MühleController.mark.equals(""))return;
+  
 			MühleController.markiert = true;
 			System.out.println(MühleController.mark);
 			G.repaint();
@@ -168,6 +178,7 @@ public class MühleController extends JPanel{
 			MühleController.setFigure(auswahlX,auswahlY,auswahlRing,farbe);
 			MühleController.markX = MühleController.markY = MühleController.markRing=-1; 
 			MühleController.mark = "";
+
 			G.repaint();
 			
 			if(farbe.equals("schwarz")) {
