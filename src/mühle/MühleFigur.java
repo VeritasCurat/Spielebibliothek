@@ -30,45 +30,19 @@ class Läufer extends  MühleFigur{
 		super(x, y,Ring, farbe);
 		typ = "Läufer";
 		this.farbe= farbe; 
+		System.out.println(this.farbe);
 	}
 	
 	//verifiziert ob Bewegung dem Muster dieser Figur entspricht
-	boolean move(int a, int b) {
-		
-		int x = X-a; int y = Y-b;
-		
-		if(Math.abs(x+y) == 1) {
-			//extraring bewegung
-				if(Math.abs(X+Y)==1) { 
-					if(Ring==1)return true;
-					if(Ring==0 && (X+Y+x+y)==2)return true;
-					if(Ring==2 && (X+Y+x+y)==0)return true;
-				}
+	boolean move(int a, int b, int ring) {//TODO: effizienter schreiben	
+		if(this.Ring == ring) {
 			//interring bewegung
-				if(X==0 && Y==0) {//linke, obere Ecke
-					if(x==1 || y==1)return true;
-					else return false;
-				}
-				else if(X==2 && Y==0) {
-					if(x==-1 || y==1)return true;
-					else return false;
-				}
-				else if(X==2 && Y==0) {
-					if(x==1 || y==-1)return true;
-					else return false;
-				}
-				else if(X==2 && Y==2) {
-					if(x==-1 || y==-1)return true;
-					else return false;
-				}
-				else if(X==1) {
-					if(y==-1 || y==1)return true;
-					else return false;
-				}
-				else if(Y==1) {
-					if(x==1 || x==-1)return true;
-					else return false;
-				}
+				//Bedingung1: Abstand=1
+				if(Math.abs(X-a)+Math.abs(Y-b) == 1)return true;
+		}
+		//extraring bewegung
+		if(this.Ring != ring) { 
+			if(Math.abs(Ring-ring) == 1 && X==a && Y==b)return true;
 		}
 		return false;
 	}
@@ -84,7 +58,7 @@ class Springer extends  MühleFigur{
 		this.farbe= farbe; 
 	}
 	
-	boolean move(int x, int y) {
+	boolean move(int x, int y,int ring) {
 		return true;
 	}
 	
