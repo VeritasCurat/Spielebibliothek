@@ -3,7 +3,6 @@ package mühle;
 import java.util.ArrayList;
 import java.util.List;
 
-import tetris.Figur;
 
 public class MühleSpielfeld {
 		

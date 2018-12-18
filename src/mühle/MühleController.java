@@ -77,7 +77,7 @@ public class MühleController extends JPanel{
 			return "";
 		}
 
-		auswahl = f+t; auswahlX = x; auswahlY =y; auswahlRing = ring;
+		mark = f+t; auswahlX = k[0]; auswahlY =k[1]; auswahlRing = k[2];
 		return f+t;
 	}
 	
