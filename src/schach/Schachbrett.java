@@ -4,12 +4,11 @@ public class Schachbrett {
 	 * Klasse die 
 	 */
 		
-	 boolean automatic = true;
 	 boolean spiel_aktiv=true;
 	 SchachFigur[][] figuren = new SchachFigur[8][8];
 	static final int bauer_wert = 10; 	static final int pferd_wert = 30; 	static final int läufer_wert = 30; 	static final int turm_wert = 50;	static final int dame_wert = 90; 	static final int könig_wert = 900;
 
-	
+	String sieger="";
 	//Variablen für Rochade
 
 		
@@ -51,27 +50,27 @@ public class Schachbrett {
 
 		//Das ist garkein Feld
 		if(x1 < 0 || y1 < 0 || x1 > 7 || y1 > 7) {
-			if(automatic == false)System.out.println("Das ist garkein Feld");
+			if(SchachController.hinweise == true)System.out.println("Das ist garkein Feld");
 			return false;
 		}	
 		//auf dem Feld steht keine Figur
 		if(figuren[x1][y1].typ.equals("NULL") || figuren[x1][y1].typ.equals("") || figuren[x1][y1].farbe.equals("")) {
-			if(automatic == false)System.out.println("auf dem Feld steht keine Figur");
+			if(SchachController.hinweise == true)System.out.println("auf dem Feld steht keine Figur");
 			return false;
 		}
 		//das ist nicht ihre Figur
 		if(!figuren[x1][y1].farbe.equals(farbe)) {
-			if(automatic == false)System.out.println("das ist nicht ihre Figur: "+x1+", "+y1);
+			if(SchachController.hinweise == true)System.out.println("das ist nicht ihre Figur: "+x1+", "+y1);
 			return false;
 		}
 		//außerhalb des Feldes => nein
 		if(x2 < 0 || y2 < 0 || x2 > 7 || y2 > 7) {
-			if(automatic == false)System.out.println("Diese Bewegung führt außerhalb des Feldes ");
+			if(SchachController.hinweise == true)System.out.println("Diese Bewegung führt außerhalb des Feldes ");
 			return false;
 		}
 		//eigene Figur => nein 
 		if(figuren[x2][y2].farbe.equals(figuren[x1][y1].farbe)) {
-			if(automatic == false)System.out.println("Hier steht schon einer ihrer Figuren: "+figuren[x2][y2].typ);
+			if(SchachController.hinweise == true)System.out.println("Hier steht schon einer ihrer Figuren: "+figuren[x2][y2].typ);
 			return false;
 		}
 		//Rochade
@@ -101,7 +100,7 @@ public class Schachbrett {
 			int difY = sigY;
 			while(x2 != x1+difY && y2 != y1+difY) {
 				if(!figuren[x1+difX][y1+difY].typ.equals("")) {
-					if(automatic == false) {
+					if(SchachController.hinweise == true) {
 						System.out.println("Du kannst den Läufer nicht so bewegen ... eine Figur steht im Weg");
 					}
 					return false;
@@ -116,7 +115,7 @@ public class Schachbrett {
 				int dif = sig;
 				while(y2 != y1+dif) {
 					if(!figuren[x1][y1+dif].typ.equals("")) {
-						if(automatic == false) {
+						if(SchachController.hinweise == true) {
 							System.out.println("Du kannst den Turm nicht so bewegen ... eine Figur steht im Weg: "+x1+" "+(y1+dif)+": "+figuren[x1][y1+dif].typ);
 						}
 						return false;
@@ -129,7 +128,7 @@ public class Schachbrett {
 				int dif = sig;
 				while(x2 != x1+dif) {
 					if(!figuren[x1+dif][y1].typ.equals("")) {
-						if(automatic == false) {
+						if(SchachController.hinweise == true) {
 							System.out.println("Du kannst den Turm nicht so bewegen ... eine Figur steht im Weg: "+(x1+dif)+" "+y1+": "+figuren[x1+dif][y1].typ);
 						}
 						return false;
@@ -146,7 +145,7 @@ public class Schachbrett {
 				int dif = sig;
 				while(y2 != y1+dif) {
 					if(!figuren[x1][y1+dif].typ.equals("")) {
-						if(automatic == false) {
+						if(SchachController.hinweise == true) {
 							System.out.println("Du kannst die Dame nicht so bewegen ... eine Figur steht im Weg");
 						}
 						return false;
@@ -159,7 +158,7 @@ public class Schachbrett {
 				int dif = sig;
 				while(x2 != x1+dif) {
 					if(!figuren[x1+dif][y1].typ.equals("")) {
-						if(automatic == false) {
+						if(SchachController.hinweise == true) {
 							System.out.println("Du kannst die Dame nicht so bewegen ... eine Figur steht im Weg");
 						}
 						return false;
@@ -174,7 +173,7 @@ public class Schachbrett {
 					int difY = sigY;
 					while(x2 != x1+difY && y2 != y1+difY) {
 						if(!figuren[x1+difX][y1+difY].typ.equals("")) {
-							if(automatic == false) {
+							if(SchachController.hinweise == true) {
 								System.out.println("Du kannst den Läufer nicht so bewegen ... eine Figur steht im Weg");
 							}
 							return false;
@@ -190,7 +189,7 @@ public class Schachbrett {
 					if((dif = x2-x1) != 0) {
 						
 					if((figuren[x2][y2].farbe.equals("") || figuren[x2][y2].farbe.equals(farbe))) {
-						if(automatic == false) {
+						if(SchachController.hinweise == true) {
 							System.out.println("Du kannst den Bauern nicht so bewegen ... keine Figur zum schlagen");
 						}
 						return false;							
@@ -203,7 +202,7 @@ public class Schachbrett {
 							dif = sig;
 							while(y2 != y1+dif) {
 								if(!figuren[x1][y1+dif].typ.equals("")) {
-									if(automatic == false) {
+									if(SchachController.hinweise == true) {
 										System.out.println("Du kannst den Bauern nicht so bewegen ... eine Figur steht im Weg");
 									}
 									return false;
@@ -221,6 +220,10 @@ public class Schachbrett {
 	
 	
 	public boolean bewegungAusführen(int x1,int y1, int x2, int y2, String farbe){
+		if(x1==x2 && y1==y2) {
+			spiel_aktiv=false;
+			return true;
+		}
 		if(x1==0 && x2==0 && y1==0 && y2==0)return true;
 		if(bewegungPrüfen(x1,y1,x2,y2,farbe)){
 			//Rochade
@@ -241,7 +244,11 @@ public class Schachbrett {
 				return true;
 			}
 			//Spielende
-			if(figuren[x2][y2] instanceof König)spiel_aktiv = false;
+			if(figuren[x2][y2] instanceof König) {
+				if(figuren[x2][y2].farbe.equals("weiß"))sieger="schwarz";
+				if(figuren[x2][y2].farbe.equals("schwarz"))sieger="weiß";
+				spiel_aktiv = false;
+			}
 			//Zug Gültig
 			switch(figuren[x1][y1].typ) {
 				case "Bauer": {figuren[x2][y2] = new Bauer(x2, y2, farbe,true); break;}
@@ -275,6 +282,14 @@ public class Schachbrett {
 	}
 	
 	public static void write_ab(Schachbrett a, Schachbrett b) {
+		if(a==null) {
+			System.out.println("SChachbrett a NULL");
+			System.exit(0);
+		}
+		if(b==null) {
+			System.out.println("SChachbrett b NULL");
+			System.exit(0);
+		}
 		for(int i=0; i<a.figuren.length; i++) {
 			for(int j=0; j<a.figuren[0].length; j++) {
 				if(a.figuren[i][j] instanceof Bauer) {
@@ -297,7 +312,6 @@ public class Schachbrett {
 				}
 				
 				b.figuren[i][j].typ = a.figuren[i][j].typ;
-				b.figuren[i][j].automatic = a.figuren[i][j].automatic;
 				b.figuren[i][j].darstellung = a.figuren[i][j].darstellung;
 			}
 		}

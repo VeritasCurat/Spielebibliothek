@@ -33,6 +33,11 @@ public class SchachGUI extends JFrame{
 		setVisible(true);
 		setResizable(false);
 	}
+	
+	public void close() {
+		window.removeAll();
+		window.dispose();
+	}
 
   public static void init() throws IOException {
 		    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -373,8 +378,8 @@ class ShowCanvas extends JPanel {
 			g.setColor(Color.red); 
 			SchachController.changeFarbe();
 			g.setFont(new Font("Arial", Font.PLAIN, 20)); 
-			g.drawString("Spiel zuende! "+SchachController.farbe+" gewinnt!", 370, 400);
-			g.drawString("Zum beenden klicken", 400, 500);
+			g.drawString("Spiel zuende! "+SchachController.S.sieger+" gewinnt!", 300, 350);
+			g.drawString("Zum beenden klicken", 300, 400);
 		}
 	}
 
