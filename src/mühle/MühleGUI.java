@@ -25,10 +25,11 @@ public class MühleGUI extends JFrame {
 
 	ShowCanvas canvas;
 
-	public MühleGUI() {
+	public MühleGUI(MühleSpielfeld s) {
 		super();
 		Container container = getContentPane();
-		canvas = new ShowCanvas();
+		canvas = new ShowCanvas(s);
+		
 		container.add(canvas);
 		setSize(800, 835);
 		setTitle("Mühle V0.55");
@@ -48,11 +49,13 @@ public class MühleGUI extends JFrame {
 }
 
 class ShowCanvas extends JPanel {
-
+	MühleSpielfeld lichtfeld;
+	
 	static int main = 255;
 	static int side = 200;
 	static double dark_factor = 0.5;
 
+	int markierungX=-1; int markierungY=-1; int markierungRing=-1;
 	static Color Markierung = new Color(main, side, side);
 
 	/**
@@ -61,7 +64,8 @@ class ShowCanvas extends JPanel {
 	private static final long serialVersionUID = 1L;
 	static int x, y;
 
-	ShowCanvas() {
+	ShowCanvas(MühleSpielfeld s) {
+		lichtfeld = s;
 		setBackground(Color.WHITE);
 		setSize(450, 400);
 		addMouseListener(new MouseListener() {
@@ -128,11 +132,6 @@ class ShowCanvas extends JPanel {
 		g.drawLine(5 * 100 + Offset, 1 * 100 + Offset, 5 * 100 + Offset, 5 * 100 + Offset);
 		g.drawLine(6 * 100 + Offset, 0 * 100 + Offset, 6 * 100 + Offset, 6 * 100 + Offset);
 		
-		g.drawLine(0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset, 3 * 100 + Offset);
-		g.drawLine(4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset, 3 * 100 + Offset);
-
-		
-
 		// Horizontale Linien malen
 		g.drawLine(0 * 100 + Offset, 0 * 100 + Offset, 6 * 100 + Offset, 0 * 100 + Offset);
 		g.drawLine(1 * 100 + Offset, 1 * 100 + Offset, 5 * 100 + Offset, 1 * 100 + Offset);
@@ -144,6 +143,14 @@ class ShowCanvas extends JPanel {
 		g.drawLine(3 * 100 + Offset, 0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset);
 		g.drawLine(3 * 100 + Offset, 4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset);
 
+
+		//Vertikale Verbindungslinien malen
+		g.drawLine(3 * 100 + Offset, 0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset);
+		g.drawLine(3 * 100 + Offset, 4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset);
+
+		//Horizontale Verbindungslinien malen
+		g.drawLine(0 * 100 + Offset, 3 * 100 + Offset, 2 * 100 + Offset, 3 * 100 + Offset);
+		g.drawLine(4 * 100 + Offset, 3 * 100 + Offset, 6 * 100 + Offset, 3 * 100 + Offset);
 
 		// Punkte malen
 		int x=ringkoordinateInkoordinate(MühleController.auswahlX, MühleController.auswahlRing);
@@ -176,19 +183,26 @@ class ShowCanvas extends JPanel {
 		for (int a = 0; a < 3; a++) {
 			for (int b = 0; b < 3; b++) {
 				for (int ring = 0; ring < 3; ring++) {
-					if(MühleSpielfeld.figuren[a][b][ring].typ.equals("NULL") || MühleSpielfeld.figuren[a][b][ring].typ.equals(""))continue;
-					//System.out.println(a+" "+b+" "+ring+": "+MühleSpielfeld.figuren[a][b][ring].typ+" "+MühleSpielfeld.figuren[a][b][ring].farbe);
+					boolean markierung= (a==markierungX && b==markierungY && ring==markierungRing);
+					//System.out.println(a+" "+b+" "+ring+": "+Spielfeld.figuren[a][b][ring].typ);
+					if(lichtfeld.figuren[a][b][ring].typ.equals("NULL"))continue;
 					x=ringkoordinateInkoordinate(a, ring);
 					y=ringkoordinateInkoordinate(b, ring);
 
-					if(MühleSpielfeld.figuren[a][b][ring].farbe.equals("weiß")) g.setColor(Color.WHITE);
-					if(MühleSpielfeld.figuren[a][b][ring].farbe.equals("schwarz")) g.setColor(Color.BLACK);
-					g.fillOval(x * 100 + Offset-20, y * 100 + Offset-20, 40, 40);
+					if(lichtfeld.figuren[a][b][ring].farbe.equals("weiß")) g.setColor(Color.WHITE);
+					if(lichtfeld.figuren[a][b][ring].farbe.equals("schwarz")) g.setColor(Color.BLACK);
+					g.fillOval(x * 100 + Offset - 20, y * 100 + Offset - 20, 40, 40);
+					
+					if(markierung) {
+						g.setColor(Color.RED.darker().darker().darker());
+						g.fillOval(a * 100 + Offset-25, b * 100 + Offset-25, 50, 50);
+					}
+
 				}
 			}
 		}
 
-		if (!MühleSpielfeld.spiel_aktiv) {
+		if (!lichtfeld.spiel_aktiv) {
 			g.setColor(Color.white);
 			g.fillRect(0, 0, 1000, 1000);
 			g.setColor(Color.red);

@@ -9,6 +9,15 @@ public class Schachbrett {
 	static final int bauer_wert = 10; 	static final int pferd_wert = 30; 	static final int läufer_wert = 30; 	static final int turm_wert = 50;	static final int dame_wert = 90; 	static final int könig_wert = 900;
 
 	String sieger="";
+	
+	int[][] raumwert = {{0,0,0,0,0,0,0,0},
+						{0,0,0,0,0,0,0,0},
+						{1,1,1,1,1,1,1,1},
+						{1,1,1,1,1,1,1,1},
+						{1,1,1,1,1,1,1,1},
+						{1,1,1,1,1,1,1,1},
+						{2,2,2,2,2,2,2,2},
+						{2,2,2,2,2,2,2,2}};
 	//Variablen für Rochade
 
 		
@@ -394,4 +403,40 @@ public class Schachbrett {
 	}
 	
 
+	
+	//TODO: NEU: in andere Version einfügen
+	/** wieviele Felder kontrolliert der Spieler mit Farbe?
+	 * @return 
+	 */
+	public int feldpunkte(String Farbe) {
+		int punkte=0;
+		int[][] p = new int[8][8];		
+		
+		for(int x1=0; x1<8; x1++) {
+			for(int y1=0; y1<8; y1++) {
+				if(Farbe.equals("weiß") && !figuren[x1][y1].farbe.equals("weiß"))continue;
+				else if(Farbe.equals("schwarz") && !figuren[x1][y1].farbe.equals("schwarz"))continue;
+				for(int x2=0; x2<8; x2++) {
+					for(int y2=0; y2<8; y2++) {
+						if(Farbe.equals("weiß") && bewegungPrüfen(x1, y1, x2, y2, "weiß")) {
+							++p[x2][y2];
+							continue;
+						}
+						else if(Farbe.equals("schwarz") && !bewegungPrüfen(x1, y1, x2, y2, "schwarz")) {
+							--p[x2][y2];
+							continue;
+						}
+					}
+				}
+			}
+		}
+		
+		for(int x1=0; x1<8; x1++) {
+			for(int y1=0; y1<8; y1++) {
+				if(Farbe.equals("weiß") && p[x1][y1]>0)punkte+=raumwert[x1][y1];
+				if(Farbe.equals("schwarz") && p[x1][y1]<0)punkte+=raumwert[x1][7-y1];
+			}
+		}
+		return punkte;
+	}
 }
