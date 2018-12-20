@@ -55,11 +55,11 @@ public class SchachController extends JPanel{
 	public static String markFigure(int x, int y) {
 		String f = S.figuren[x][y].farbe.substring(0,1);
 		String t = S.figuren[x][y].typ.substring(0,1);
-		System.out.println(x+" "+y+": "+f+t);
 		if(!f.equals(farbe.substring(0,1))) {
 			System.out.println("falsche Farbe: "+f+"!="+farbe.substring(0,1));
 			return "";
 		}
+		hinweise=false;
 		generiereVorschlaege(x, y);
 		auswahl = f+t; auswahlX = x; auswahlY = y;
 		return f+t;
@@ -69,9 +69,7 @@ public class SchachController extends JPanel{
 		return S.figuren[x][y];
 	}
 	
-	public static void bauerntausch(int x2, int y2, String figur, String Farbe) {	
-		System.out.println("tausche gegen "+figur);
-		
+	public static void bauerntausch(int x2, int y2, String figur, String Farbe) {			
 		switch(figur) {
 			case "Läufer": {S.figuren[x2][y2] = new Läufer(x2, y2, farbe_mensch,true); break;}
 			case "Pferd": {S.figuren[x2][y2] = new Pferd(x2, y2, farbe_mensch,true); break;}
@@ -88,9 +86,8 @@ public class SchachController extends JPanel{
 	}
 
 	public static void setFigure(int x, int y) {
-		System.out.println("GUI bewegung: "+auswahl+": "+auswahlX+" "+auswahlY+" => "+x+" "+y);
 		zuruecksetzenVorschlaege();
-
+		hinweise=false;
 		if(!S.bewegungAusführen(auswahlX, auswahlY, x, y, farbe))return;	
 		
 		//Bauer gegen Dame tauschen
@@ -165,9 +162,9 @@ public class SchachController extends JPanel{
 	}
 	
 	public static void spiel_gegen_KI() {
-		farbe_mensch = "schwarz";
-		farbe_ki = "weiß";
-		ki = new SchachKI2(farbe_ki);
+		farbe_mensch = "weiß";
+		farbe_ki = "schwarz";
+		ki = new SchachKI2(farbe_ki,"alphabeta",4);
 		G.canvas.lichtspiel = ki.S = S;
 		spieler_aktion();
 	}

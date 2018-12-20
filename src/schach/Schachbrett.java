@@ -275,7 +275,7 @@ public class Schachbrett {
 	}
 
 	public void print() {
-		System.out.println("Y X| A | B | C | D | E | F | G | H |");
+		System.out.println("Y X| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |");
 
 		for(int y=0; y<8; y++) {
 			System.out.println("---+---+---+---+---+---+---+---+---+");

@@ -22,8 +22,8 @@ public class Testbench {
 		
 		S = new Schachbrett();
 		String farben[] = {"weiﬂ","schwarz"};
-		ki1 = new SchachKI2(farben[(int) Math.random()*2]); ki1.rekursionstiefe=3;
-		ki2 = new SchachKI2(ki1.gegnerfarbe); ki1.rekursionstiefe=4;
+		ki1 = new SchachKI2("schwarz","alphabeta",4);
+		ki2 = new SchachKI2(ki1.gegnerfarbe,"minimax",4);
 		G.canvas.lichtspiel = ki1.S = ki2.S = S;
 	
 		SchachController.hinweise=false;
