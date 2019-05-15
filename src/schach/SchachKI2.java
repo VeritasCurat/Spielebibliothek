@@ -1,40 +1,51 @@
 package schach;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SchachKI2 {
-	static int KI_x1=-1; static int KI_x2=-1; static int KI_y1=-1; static int KI_y2=-1;
-	static final int bauer_wert = 10; 	static final int pferd_wert = 30; 	static final int l‰ufer_wert = 30; 	static final int turm_wert = 50;	static final int dame_wert = 90; 	static final int kˆnig_wert = 900;
+	int cnt_pruning; int cnt_gesamt; //TODO: lˆschen wenn alphabeta verifiziert wurde
 
+/*
 	int MINpunkte_weiﬂ; int MAXpunkte_schwarz;
 	
 	static String KIfarbe = "schwarz";
+	public String eigenefarbe, gegnerfarbe;
+	int KI_x1=-1; int KI_x2=-1; int KI_y1=-1; int KI_y2=-1;
+	static final int bauer_wert = 10; 	static final int pferd_wert = 30; 	static final int l‰ufer_wert = 30; 	static final int turm_wert = 50;	static final int dame_wert = 90; 	static final int kˆnig_wert = 900;
+
+	int gegnerPunkteMIN; int eigenePunkteMAX;
 	
 	Schachbrett schattenbrett;
 	Schachbrett S;
-	static String Strategie = "test";
+	static String Strategie = "zufall";
 
 	static int rekursionstiefe = 4; //Bester wert: 3
+*/
+
+	public int rekursionstiefe = 4; //Bester wert: 3
 	static int alphabeta=0;
+	String algorithmus="";
 	
 	
 	List<Integer[]> zuege;
-	public SchachKI2() {
+	public SchachKI2(String farbe, String algo,int rekur) {
 		zuege = new ArrayList<Integer[]>();
 		schattenbrett = new Schachbrett();
+		eigenefarbe = farbe; 
+		gegnerfarbe = invFarbe(eigenefarbe);
+		this.algorithmus = algo;
+		this.rekursionstiefe = rekur;
 	}
 	
 	public void zug_generieren() {
 		Schachbrett.write_ab(S, schattenbrett);
-		schattenbrett.print();
+		//schattenbrett.print();
 		Integer[] anfang = {0,0,0,0,0};
-		System.out.println("---------------------------------------\n\n\n");
-		//minimax-Algorithmus
-			Integer[] a = minimax(rekursionstiefe, "schwarz", anfang, schattenbrett);
-		//minimax-Algorithmus + alphabeta-pruning
-			//MAXpunkte_schwarz = Integer.MIN_VALUE; MINpunkte_weiﬂ = Integer.MAX_VALUE;
-			//Integer[] a = alphabeta(rekursionstiefe, "schwarz", anfang, schattenbrett);
+
+
+
 		
 		//System.out.println("Endergebnis: "+a[0]+" "+a[1]+" => "+a[2]+" "+a[3]+": "+a[4]);
 		KI_x1=a[0];
@@ -119,15 +130,133 @@ public class SchachKI2 {
 	}
 	
 	private Integer[] minimax(int tiefe, String farbe, Integer[] zug, Schachbrett sb) {
+	
+	
+	
+	private Integer[] alphabeta(int tiefe, String farbe, Integer[] zug, Schachbrett sb, int eigenePunkteMAX, int gegnerPunkteMIN) {
+		++cnt_gesamt;
 		Schachbrett kopie = new Schachbrett();
 		Schachbrett.write_ab(sb, kopie);
-		//System.out.println(zug[0]+", "+zug[1]+" => "+zug[2]+" "+zug[3]);
 		kopie.bewegungAusf¸hren(zug[0], zug[1], zug[2], zug[3], invFarbe(farbe));
+		//System.out.println(zug[0]+", "+zug[1]+" => "+zug[2]+" "+zug[3]);
+		
+//		int wert = 0;
+//		if(eigenefarbe.equals("schwarz"))wert = kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ(); 
+//		if(eigenefarbe.equals("weiﬂ"))wert = kopie.figurenpunkte_weiﬂ() - kopie.figurenpunkte_schwarz(); 
+		
 		
 		//Basisschritt: return wert des erstens zugs (oder: eines zuf‰lligen)
 		if(tiefe == 0) {
 			Integer a[] = new Integer[5];  
-			a[4] =  kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ();
+			if(eigenefarbe.equals("schwarz"))a[4] = kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ(); 
+			if(eigenefarbe.equals("weiﬂ"))a[4] = kopie.figurenpunkte_weiﬂ() - kopie.figurenpunkte_schwarz(); 
+			return a;
+		}
+			
+		//Rekursionsschritt: f¸hre die Bewegung aus; finde das Maximum unter den z¸gen
+		List<Integer[]> max_zuege = mˆgliche_zuege(farbe, kopie);
+		if(max_zuege.isEmpty()) {
+			Integer[] a = {-1,-1,-1,-1, Integer.MIN_VALUE};
+			return a;
+		}
+		
+		
+		//wenn invFarbe(farbe)=schwarz: wert maximieren, sonst: minimieren
+		int best_wert = 0;
+		int best_index=0;
+		if(farbe.equals(eigenefarbe)) best_wert =Integer.MIN_VALUE; 
+		if(farbe.equals(gegnerfarbe)) best_wert =Integer.MAX_VALUE; 
+		
+		List<Integer[]> best_zuege = new ArrayList<Integer[]>();
+		
+		String neuefarbe =  invFarbe(farbe);
+		f: for(int i=0; i<max_zuege.size(); i++) {
+				int neuerwert = alphabeta(tiefe-1,neuefarbe, max_zuege.get(i), kopie, eigenePunkteMAX, gegnerPunkteMIN)[4];
+				//if(tiefe==2)System.out.println(max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(i)[0]][max_zuege.get(i)[1]].typ+" : "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].farbe+" "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].typ+": "+wert);;
+				//if(tiefe==1)System.out.println("    "+max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(i)[0]][max_zuege.get(i)[1]].typ+" : "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].farbe+" "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].typ+" "+wert);;
+				
+				//alpha pruning
+				if(farbe.equals(eigenefarbe)) {
+					if(neuerwert > eigenePunkteMAX) {
+						//System.out.println(tiefe+" "+eigenefarbe+": "+wert+" : "+max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]);
+						eigenePunkteMAX=neuerwert;
+					}
+					if(neuerwert < eigenePunkteMAX) {
+						//System.out.println(tiefe+": "+invFarbe(farbe)+" "+neuerwert+" < "+eigenePunkteMAX);		
+						++cnt_pruning;
+						continue f;
+					}	
+				}
+				
+				//beta pruning
+				if(farbe.equals(gegnerfarbe)) {
+					if(neuerwert < gegnerPunkteMIN) {
+						//System.out.println(tiefe+" "+gegnerfarbe+": "+wert+" : "+max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]);
+						gegnerPunkteMIN=neuerwert;
+					}
+					if(neuerwert > gegnerPunkteMIN) {
+						++cnt_pruning;
+						continue;		
+					}
+				}
+				
+				
+				if(farbe.equals(eigenefarbe)) {
+					if(neuerwert > best_wert) {
+						best_wert = neuerwert;
+						best_index = i;
+						max_zuege.get(i)[4] = neuerwert;
+						best_zuege = new ArrayList<Integer[]>();
+					}
+					if(neuerwert == best_wert) {
+						best_zuege.add(max_zuege.get(i));
+					}
+				}
+				if(farbe.equals(gegnerfarbe)) {
+					if(neuerwert < best_wert) {
+						best_wert = neuerwert;
+						best_index = i;
+						max_zuege.get(i)[4] = neuerwert;
+						best_zuege = new ArrayList<Integer[]>();
+					}
+					if(neuerwert == best_wert) {
+						best_zuege.add(max_zuege.get(i));
+					}
+				}		
+		}
+//		System.out.println("    "+max_zuege.get(best_index)[0]+" "+max_zuege.get(best_index)[1]+" => "+max_zuege.get(best_index)[2]+" "+max_zuege.get(best_index)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(best_index)[0]][max_zuege.get(best_index)[1]].typ+" : "+sb.figuren[max_zuege.get(best_index)[2]][max_zuege.get(best_index)[3]].farbe+" "+sb.figuren[max_zuege.get(best_index)[2]][max_zuege.get(best_index)[3]].typ+" "+best_wert);;
+//		System.out.println("    "+max_zuege.get(best_index)[0]+" "+max_zuege.get(best_index)[1]+" => "+max_zuege.get(best_index)[2]+" "+max_zuege.get(best_index)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(best_index)[0]][max_zuege.get(best_index)[1]].typ+" : "+sb.figuren[max_zuege.get(best_index)[2]][max_zuege.get(best_index)[3]].farbe+" "+sb.figuren[max_zuege.get(best_index)[2]][max_zuege.get(best_index)[3]].typ+" "+best_wert);;
+
+		Integer[] pseudo = {0,0,0,0,0};
+		if(best_zuege.size()==0 && farbe.equals(eigenefarbe)) {
+			pseudo[4] = eigenePunkteMAX;
+			return pseudo;
+		}
+		if(best_zuege.size()==0 && farbe.equals(gegnerfarbe)) {
+			pseudo[4] = gegnerPunkteMIN;
+			return pseudo;
+		}
+		
+		return heuristik(best_zuege); //max_zuege.get(best_index);
+	}
+	
+	private Integer[] minimax(int tiefe, String farbe, Integer[] zug, Schachbrett sb) {
+		Schachbrett kopie = new Schachbrett();
+		Schachbrett.write_ab(sb, kopie);
+		kopie.bewegungAusf¸hren(zug[0], zug[1], zug[2], zug[3], invFarbe(farbe));
+		//System.out.println(zug[0]+", "+zug[1]+" => "+zug[2]+" "+zug[3]);
+		
+		int wert = 0;
+		if(eigenefarbe.equals("schwarz"))wert = kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ(); 
+		if(eigenefarbe.equals("weiﬂ"))wert = kopie.figurenpunkte_weiﬂ() - kopie.figurenpunkte_schwarz(); 
+		
+		
+		//Basisschritt: return wert des erstens zugs (oder: eines zuf‰lligen)
+		if(tiefe == 0) {
+			Integer a[] = new Integer[5];  
+//			a[4] =  kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ();
+			if(eigenefarbe.equals("schwarz"))a[4] = kopie.figurenpunkte_schwarz() - kopie.figurenpunkte_weiﬂ(); 
+			if(eigenefarbe.equals("weiﬂ"))a[4] = kopie.figurenpunkte_weiﬂ() - kopie.figurenpunkte_schwarz(); 
 			return a;
 		}
 		
@@ -141,34 +270,43 @@ public class SchachKI2 {
 		
 		
 		//wenn invFarbe(farbe)=schwarz: wert maximieren, sonst: minimieren
-		int best_wert = 0;int best_index=0;
-		if(farbe.equals("schwarz")) best_wert =Integer.MIN_VALUE; 
-		if(farbe.equals("weiﬂ")) best_wert =Integer.MAX_VALUE; 
+		int best_wert = 0;
+		int best_index=0;
+		if(farbe.equals(eigenefarbe)) best_wert =Integer.MIN_VALUE; 
+		if(farbe.equals(gegnerfarbe)) best_wert =Integer.MAX_VALUE; 
 		
 		List<Integer[]> best_zuege = new ArrayList<Integer[]>();
 		
 		for(int i=0; i<max_zuege.size(); i++) {
+
 				int wert = minimax(tiefe-1, invFarbe(farbe), max_zuege.get(i), kopie)[4];
 							
 				if(farbe.equals("schwarz")) {
 					if(wert > best_wert) {
 						best_wert = wert;
+				int neuerwert = minimax(tiefe-1, invFarbe(farbe), max_zuege.get(i), kopie)[4];
+				//if(tiefe==2)System.out.println(max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(i)[0]][max_zuege.get(i)[1]].typ+" : "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].farbe+" "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].typ+": "+wert);;
+				//if(tiefe==1)System.out.println("    "+max_zuege.get(i)[0]+" "+max_zuege.get(i)[1]+" => "+max_zuege.get(i)[2]+" "+max_zuege.get(i)[3]+" "+farbe+" "+sb.figuren[max_zuege.get(i)[0]][max_zuege.get(i)[1]].typ+" : "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].farbe+" "+sb.figuren[max_zuege.get(i)[2]][max_zuege.get(i)[3]].typ+" "+wert);;
+							
+				if(farbe.equals(eigenefarbe)) {
+					if(neuerwert > best_wert) {
+						best_wert = neuerwert;
 						best_index = i;
-						max_zuege.get(i)[4] = wert;
+						max_zuege.get(i)[4] = neuerwert;
 						best_zuege = new ArrayList<Integer[]>();
 					}
-					if(wert == best_wert) {
+					if(neuerwert == best_wert) {
 						best_zuege.add(max_zuege.get(i));
 					}
 				}
-				if(farbe.equals("weiﬂ")) {
-					if(wert < best_wert) {
-						best_wert = wert;
+				if(farbe.equals(gegnerfarbe)) {
+					if(neuerwert < best_wert) {
+						best_wert = neuerwert;
 						best_index = i;
-						max_zuege.get(i)[4] = wert;
+						max_zuege.get(i)[4] = neuerwert;
 						best_zuege = new ArrayList<Integer[]>();
 					}
-					if(wert == best_wert) {
+					if(neuerwert == best_wert) {
 						best_zuege.add(max_zuege.get(i));
 					}
 				}
@@ -180,7 +318,6 @@ public class SchachKI2 {
 	
 	
 	private List<Integer[]> mˆgliche_zuege(String farbe, Schachbrett b) {
-		b.automatic = true;	
 		List<Integer[]> best_zuege = new ArrayList<>(); 
 								
 		for(int x1=0; x1<8; x1++) {
@@ -217,6 +354,16 @@ public class SchachKI2 {
 		return null;
 	}
 	
+	private static Integer[] zugsortierung(List<Integer[]> zuege, Schachbrett b, String farbe) {
+		Schachbrett[] z = new Schachbrett[zuege.size()];
+		for(int index=0; index<zuege.size(); index++) {
+			z[index].bewegungAusf¸hren(zuege.get(index)[0], zuege.get(index)[1], zuege.get(index)[2], zuege.get(index)[3], farbe);
+		}
+		
+		//TODO:
+		return null;
+	}
+	
 	/**
 	 * @param farbe = weiﬂ => return schwarz; und umgekehrt
 	 * @return
@@ -226,4 +373,5 @@ public class SchachKI2 {
 		else if(farbe.equals("schwarz"))return "weiﬂ";
 		else return "";
 	}
+	
 }

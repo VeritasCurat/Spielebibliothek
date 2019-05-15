@@ -8,7 +8,6 @@ public class SchachFigur {
 	 * Klasse stellt Elterklasse für Schachfiguren da.
 	 * 
 	 */
-	boolean automatic = true;
 	boolean bewegt = false;
 	
 	String typ="";
@@ -70,7 +69,7 @@ class Bauer extends  SchachFigur{
 		}
 		if(Y == 1 && y == 2 && x == 0) return true;
 		if(Y == 6 && y == -2 && x == 0) return true;
-		if(!automatic)System.out.println("Du kannst den Bauern nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst den Bauern nicht so bewegen!");
 		return false;
 	}
 	
@@ -91,7 +90,7 @@ class Turm extends  SchachFigur{
 		if(x == 0 || y == 0) {
 			return true;
 		}
-		if(!automatic)System.out.println("Du kannst den Turm nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst den Turm nicht so bewegen!");
 		return false;
 	}
 	
@@ -111,7 +110,7 @@ class Pferd extends  SchachFigur{
 		if((Math.abs(x) == 2 || Math.abs(y) == 2) && Math.abs(x)+Math.abs(y) == 3) { 
 			return true;
 		}
-		if(!automatic)System.out.println("Du kannst das Pferd nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst das Pferd nicht so bewegen!");
 		return false;
 	}
 	
@@ -131,7 +130,7 @@ class Läufer extends  SchachFigur{
 		if(x != 0 && y != 0 && (Math.abs(x) == Math.abs(y))) {
 			return true;
 		}
-		if(!automatic)System.out.println("Du kannst den Läufer nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst den Läufer nicht so bewegen!");
 		return false;
 	}
 }
@@ -153,7 +152,7 @@ class Dame extends  SchachFigur{
 		if(x != 0 && y != 0 && (Math.abs(x) == Math.abs(y))) {
 			return true;
 		}
-		if(!automatic)System.out.println("Du kannst die Dame nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst die Dame nicht so bewegen!");
 		return false;
 	}
 }
@@ -172,7 +171,7 @@ class König extends SchachFigur{
 		if(Math.abs(x) <= 1 && Math.abs(y) <= 1) {
 			return true;
 		}
-		if(!automatic)System.out.println("Du kannst den König nicht so bewegen!");
+		if(SchachController.hinweise)System.out.println("Du kannst den König nicht so bewegen!");
 		return false;
 	}
 }
