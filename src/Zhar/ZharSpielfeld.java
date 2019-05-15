@@ -51,6 +51,8 @@ static boolean spielende = false;
 		}
 		
 		ZharSpielfeld.spawnFigur("Bauer", 0, 1, 1);
+		ZharSpielfeld.spawnFigur("Sammler", 0, 2, 1);
+
 		ZharSpielfeld.spawnFigur("Bauer", 1, 3, 5);
 	}
 	

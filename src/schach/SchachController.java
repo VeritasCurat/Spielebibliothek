@@ -69,8 +69,7 @@ public class SchachController extends JPanel{
 		return S.figuren[x][y];
 	}
 	
-	public static void bauerntausch(int x2, int y2, String figur, String Farbe) {
-
+	public static void bauerntausch(int x2, int y2, String figur, String Farbe) {	
 		System.out.println("tausche gegen "+figur);
 		
 		changeFarbe();

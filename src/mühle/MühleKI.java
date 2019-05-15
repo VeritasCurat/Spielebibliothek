@@ -29,6 +29,6 @@ public class MühleKI {
 	 */
 	private Integer[][] minimax(int tiefe){
 		
-		
+		return null;
 	}
 }

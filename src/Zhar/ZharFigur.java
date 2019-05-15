@@ -250,78 +250,7 @@ class Sammler extends Fahrzeug{
 				
 			}
 		}
-		
-		
-		/*
-		//Bewegung von 1
-			Integer[] a = {anfang_x,anfang_y};
-			Integer[] b = {0,0};
-
-			//rechts
-			if(ZharLevel.fields[anfang_x+1][anfang_y] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x+1][anfang_y]).units > 0){					
-					b[0]=anfang_x+1; b[1]=anfang_y; gefunden=true;
-				}
-			}
-			//links
-			else if(ZharLevel.fields[anfang_x-1][anfang_y] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x-1][anfang_y]).units > 0){	
-					b[0]=anfang_x-1; b[1]=anfang_y;	gefunden=true;		
-				}
-			}
-			//oben
-			else if(ZharLevel.fields[anfang_x][anfang_y+1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x][anfang_y+1]).units > 0){						
-					b[0]=anfang_x; b[1]=anfang_y+1;gefunden=true;	
-				}
-			}
-			//unten
-			else if(ZharLevel.fields[anfang_x][anfang_y-1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x][anfang_y+1]).units > 0){						
-					b[0]=anfang_x; b[1]=anfang_y+1;gefunden=true;	
-				}
-			}
-		//Bewegung von 2
-			//oben rechts
-			if(ZharLevel.fields[anfang_x+1][anfang_y-1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x+1][anfang_y-1]).units > 0){					
-					a[0]=anfang_x+1; a[1]=anfang_y; 
-					b[0]=anfang_x+1; b[1]=anfang_y-1; 
-					gefunden=true;
-				}
-			}
-			//oben links
-			else if(ZharLevel.fields[anfang_x-1][anfang_y-1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x-1][anfang_y-1]).units > 0){	
-					a[0]=anfang_x-1; a[1]=anfang_y; 
-					b[0]=anfang_x-1; b[1]=anfang_y-1; 
-					gefunden=true;		
-				}
-			}
-			//unten rechts
-			else if(ZharLevel.fields[anfang_x+1][anfang_y+1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x+1][anfang_y+1]).units > 0){						
-					a[0]=anfang_x+1; a[1]=anfang_y; 
-					b[0]=anfang_x+1; b[1]=anfang_y+1; 
-					gefunden=true;	
-				}
-			}
-			//unten links
-			else if(ZharLevel.fields[anfang_x-1][anfang_y+1] instanceof Taramit) {
-				if(((Taramit) ZharLevel.fields[anfang_x-1][anfang_y+1]).units > 0){						
-					a[0]=anfang_x-1; a[1]=anfang_y; 
-					b[0]=anfang_x-1; b[1]=anfang_y+1; 
-					gefunden=true;		
-				}
-			}
-			if(gefunden==true) {
-				bewegungsplan.add(a);
-				bewegungsplan.add(b);
-
-				neueBewegung(bewegungsplan);
-			}
-			*/
-			
+					
 	}
 	
 	/**

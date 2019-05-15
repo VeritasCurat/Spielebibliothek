@@ -28,7 +28,7 @@ public class ZharGUI extends JFrame {
 
 	static JFrame window = new JFrame();
 	static char lastkey = '\0';
-	static char currentkey = '\0';
+	char currentkey = '\0';
 
 	int MouseX, MouseY;
 
@@ -58,7 +58,7 @@ public class ZharGUI extends JFrame {
 
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				if (currentkey == '\0') {
+				if (SwingUtilities.isLeftMouseButton(arg0)) {
 					MouseX = (arg0.getX() - 5) / 50;
 					MouseY = (arg0.getY() - 30) / 50;
 					Integer[] Mouse = { MouseX, MouseY };
@@ -75,7 +75,7 @@ public class ZharGUI extends JFrame {
 //						ShowCanvas.drag.add(Mouse);
 //						ZharController.repaint();						
 //					}
-				} else if (currentkey == ' ') {
+				} else if (SwingUtilities.isRightMouseButton(arg0)) {
 					MouseX = (arg0.getX() - 5) / 50;
 					MouseY = (arg0.getY() - 30) / 50;
 					ShowCanvas.kontextBauAuswahlX = MouseX;
@@ -141,7 +141,8 @@ public class ZharGUI extends JFrame {
 					ShowCanvas.drag = new ArrayList<Integer[]>();
 				MouseX = (arg0.getX() - 5) / 50;
 				MouseY = (arg0.getY() - 30) / 50;
-				if (ZharGUI.currentkey == ' ') {
+				if (SwingUtilities.isRightMouseButton(arg0)) {
+					System.out.println("blub");
 					for(ZharFigur z: ZharSpielfeld.zharfiguren) {
 						if(z.typ.equals("Bauer")) {								
 							if(z.anfang_x == MouseX && z.anfang_y == MouseY) {
@@ -179,12 +180,12 @@ public class ZharGUI extends JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(SwingUtilities.isRightMouseButton(arg0)) {//löschen der auswahl etc.
-					ShowCanvas.auswahlX = ShowCanvas.auswahlY = ShowCanvas.previewX = ShowCanvas.previewY = ShowCanvas.kontextBauAuswahlX = ShowCanvas.kontextBauAuswahlY = -1;
-					ShowCanvas.spawnJägerFabrik  = ShowCanvas.spawnSammlerFabrik = false;
-					ShowCanvas.spawn = "";
-					ZharController.repaint();
-				}
+//				if(SwingUtilities.isRightMouseButton(arg0)) {//löschen der auswahl etc.
+//					ShowCanvas.auswahlX = ShowCanvas.auswahlY = ShowCanvas.previewX = ShowCanvas.previewY = ShowCanvas.kontextBauAuswahlX = ShowCanvas.kontextBauAuswahlY = -1;
+//					ShowCanvas.spawnJägerFabrik  = ShowCanvas.spawnSammlerFabrik = false;
+//					ShowCanvas.spawn = "";
+//					ZharController.repaint();
+//				}
 
 
 			}

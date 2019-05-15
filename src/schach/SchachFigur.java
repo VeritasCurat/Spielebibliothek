@@ -1,6 +1,8 @@
  
 package schach;
 
+import java.util.ArrayList;
+
 public class SchachFigur {
 	/**
 	 * Klasse stellt Elterklasse für Schachfiguren da.
@@ -40,6 +42,8 @@ public class SchachFigur {
 		System.exit(0);
 		return false;
 	}
+	
+
 
 }
 
